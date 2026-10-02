@@ -1,0 +1,2141 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Mango Catch Game</title>
+
+
+    <style>
+
+        *{
+            box-sizing: border-box;
+        }
+
+
+        body{
+            margin: 0;
+
+            background: linear-gradient(
+                #6c805e,
+                #435538
+            );
+
+            font-family: Arial, sans-serif;
+
+            text-align: center;
+
+            color: white;
+
+            overflow-x: hidden;
+        }
+
+
+        h1{
+            margin: 0;
+
+            padding: 15px;
+
+            background-color: #6c805e;
+
+            color: #ffd84d;
+
+            font-size: 36px;
+
+            text-shadow: 2px 2px 4px #263d18;
+        }
+
+
+        /* GAME AREA */
+
+        #treebc{
+
+            width: 1200px;
+
+            max-width: 95%;
+
+            height: 600px;
+
+            margin: 20px auto;
+
+            border: 6px solid #789b43;
+
+            border-radius: 18px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 8px 25px black;
+
+            background-color: #81aad4;
+
+            position: relative;
+        }
+
+
+        /* SCORE */
+
+        #scorebox{
+
+            position: absolute;
+
+            top: 15px;
+
+            left: 15px;
+
+            background-color: #263d18;
+
+            border: 3px solid #789b43;
+
+            border-radius: 12px;
+
+            padding: 10px 20px;
+
+            font-size: 18px;
+
+            font-weight: bold;
+
+            z-index: 10;
+
+            box-shadow:
+                0 4px 10px rgba(0,0,0,0.4);
+        }
+
+
+        #scoretitle{
+
+            display: block;
+
+            color: #ffd84d;
+
+            font-size: 14px;
+
+            margin-bottom: 4px;
+        }
+
+
+        /* LIFE */
+
+        #lifebox{
+
+            position: absolute;
+
+            top: 15px;
+
+            right: 15px;
+
+            background-color: #263d18;
+
+            border: 3px solid #789b43;
+
+            border-radius: 12px;
+
+            padding: 10px 20px;
+
+            font-size: 18px;
+
+            font-weight: bold;
+
+            z-index: 10;
+
+            box-shadow:
+                0 4px 10px rgba(0,0,0,0.4);
+        }
+
+
+        #lifetitle{
+
+            display: block;
+
+            color: #ff7070;
+
+            font-size: 14px;
+
+            margin-bottom: 4px;
+        }
+
+
+        /* MANGO */
+
+        .mango{
+
+            width: 36px;
+
+            height: 30px;
+
+            position: absolute;
+
+            z-index: 3;
+
+            user-select: none;
+
+            pointer-events: none;
+
+        }
+
+
+        /* BASKET */
+
+        #basket{
+
+            width: 106px;
+
+            height: 60px;
+
+            position: absolute;
+
+            left: 50%;
+
+            bottom: 25px;
+
+            transform: translateX(-50%);
+
+            z-index: 5;
+
+            user-select: none;
+
+            pointer-events: none;
+
+            transition: left 0.08s linear;
+        }
+
+
+        /* START */
+
+        #start{
+
+            position: absolute;
+
+            bottom: 20px;
+
+            left: 20px;
+
+            background: linear-gradient(
+                #ffc533,
+                #ff9f00
+            );
+
+            color: #251700;
+
+            border: none;
+
+            border-radius: 12px;
+
+            padding: 13px 25px;
+
+            font-size: 20px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 5px 0 #a66d00,
+                0 8px 15px rgba(0,0,0,0.3);
+
+            z-index: 10;
+
+            transition: 0.15s;
+        }
+
+
+        #start:hover{
+
+            transform: scale(1.05);
+
+            background:
+                linear-gradient(
+                    #ffe066,
+                    #ffb300
+                );
+        }
+
+
+        #start:active{
+
+            transform:
+                translateY(3px)
+                scale(0.98);
+
+            box-shadow:
+                0 2px 0 #a66d00;
+        }
+
+
+        /* SCORE BUTTON */
+
+        #mark{
+
+            position: absolute;
+
+            bottom: 20px;
+
+            right: 20px;
+
+            background-color: #263d18;
+
+            color: #ffd84d;
+
+            border: 3px solid #789b43;
+
+            border-radius: 12px;
+
+            padding: 12px 25px;
+
+            font-size: 20px;
+
+            font-weight: bold;
+
+            z-index: 10;
+
+            box-shadow:
+                0 4px 10px rgba(0,0,0,0.4);
+        }
+
+
+        /* MOBILE CONTROLS */
+
+        #controls{
+
+            display: none;
+
+            position: absolute;
+
+            bottom: 12px;
+
+            left: 50%;
+
+            transform: translateX(-50%);
+
+            width: 100%;
+
+            justify-content: center;
+
+            gap: 18px;
+
+            z-index: 15;
+
+            user-select: none;
+        }
+
+
+        #leftbtn,
+        #rightbtn{
+
+            min-width: 115px;
+
+            padding: 13px 20px;
+
+            background:
+                linear-gradient(
+                    #58783c,
+                    #263d18
+                );
+
+            color: white;
+
+            border: 3px solid #a1c45b;
+
+            border-radius: 16px;
+
+            font-size: 18px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 5px 0 #17250e,
+                0 8px 15px rgba(0,0,0,0.4);
+
+            touch-action: manipulation;
+
+            transition: 0.12s;
+        }
+
+
+        #leftbtn:hover,
+        #rightbtn:hover{
+
+            background:
+                linear-gradient(
+                    #6d9549,
+                    #365a25
+                );
+        }
+
+
+        #leftbtn:active,
+        #rightbtn:active{
+
+            transform:
+                translateY(4px);
+
+            box-shadow:
+                0 1px 0 #17250e;
+        }
+
+
+        /* GAME OVER */
+
+        #gameoverbox{
+
+            position: absolute;
+
+            top: 50%;
+
+            left: 50%;
+
+            transform:
+                translate(-50%, -50%);
+
+            width: 320px;
+
+            max-width: 85%;
+
+            background:
+                linear-gradient(
+                    #263d18,
+                    #18270f
+                );
+
+            border: 4px solid #ffd84d;
+
+            border-radius: 20px;
+
+            padding: 28px;
+
+            text-align: center;
+
+            box-shadow:
+                0 10px 30px black;
+
+            z-index: 20;
+
+            display: none;
+
+            animation:
+                gameoverpop 0.35s ease;
+        }
+
+
+        @keyframes gameoverpop{
+
+            0%{
+                transform:
+                    translate(-50%, -50%)
+                    scale(0.5);
+
+                opacity: 0;
+            }
+
+            100%{
+                transform:
+                    translate(-50%, -50%)
+                    scale(1);
+
+                opacity: 1;
+            }
+        }
+
+
+        #gameovertitle{
+
+            color: #ff7070;
+
+            font-size: 32px;
+
+            font-weight: bold;
+
+            margin-bottom: 10px;
+
+            text-shadow:
+                2px 2px 5px black;
+        }
+
+
+        #gameovertext{
+
+            color: white;
+
+            font-size: 20px;
+
+            margin-bottom: 20px;
+        }
+
+
+        #tryagain{
+
+            background:
+                linear-gradient(
+                    #ffc533,
+                    #ff9f00
+                );
+
+            color: #251700;
+
+            border: none;
+
+            border-radius: 12px;
+
+            padding: 12px 24px;
+
+            font-size: 17px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 4px 0 #a66d00;
+        }
+
+
+        #tryagain:active{
+
+            transform:
+                translateY(3px);
+
+            box-shadow:
+                0 1px 0 #a66d00;
+        }
+
+
+
+        /* TABLET */
+
+        @media(max-width:1000px){
+
+            #treebc{
+
+                height: 600px;
+
+            }
+
+
+            #controls{
+
+                display: flex;
+
+            }
+
+
+            #start{
+
+                left: 15px;
+
+                bottom: 15px;
+
+                font-size: 15px;
+
+                padding: 10px 15px;
+            }
+
+
+            #mark{
+
+                right: 15px;
+
+                bottom: 15px;
+
+                font-size: 15px;
+
+                padding: 10px 15px;
+            }
+
+
+            #basket{
+
+                width: 80px;
+
+                height: 45px;
+            }
+
+
+            .mango{
+
+                width: 34px;
+
+                height: 28px;
+            }
+        }
+
+
+
+        /* MOBILE */
+
+        @media(max-width:600px){
+
+            h1{
+
+                font-size: 27px;
+
+                padding: 12px;
+            }
+
+
+            #treebc{
+
+                width: 96%;
+
+                height: 600px;
+
+                margin: 10px auto;
+
+                border-width: 4px;
+            }
+
+
+            #scorebox,
+            #lifebox{
+
+                top: 10px;
+
+                padding: 7px 10px;
+
+                font-size: 12px;
+
+                border-width: 2px;
+            }
+
+
+            #scoretitle,
+            #lifetitle{
+
+                font-size: 11px;
+            }
+
+
+            #scorebox{
+
+                left: 8px;
+            }
+
+
+            #lifebox{
+
+                right: 8px;
+            }
+
+
+            .mango{
+
+                width: 30px;
+
+                height: 25px;
+            }
+
+
+            #basket{
+
+                width: 75px;
+
+                height: 42px;
+
+                bottom: 75px;
+            }
+
+
+            #controls{
+
+                bottom: 9px;
+
+                gap: 10px;
+            }
+
+
+            #leftbtn,
+            #rightbtn{
+
+                min-width: 105px;
+
+                padding: 10px 15px;
+
+                font-size: 17px;
+
+                border-width: 2px;
+            }
+
+
+            #start{
+
+                top: 80px;
+
+                bottom: auto;
+
+                left: 50%;
+
+                transform:
+                    translateX(-50%);
+
+                font-size: 14px;
+
+                padding: 8px 14px;
+            }
+
+
+            #mark{
+
+                top: 80px;
+
+                bottom: auto;
+
+                right: 8px;
+
+                font-size: 13px;
+
+                padding: 7px 10px;
+            }
+
+
+            #gameoverbox{
+
+                width: 280px;
+            }
+
+
+            #gameovertitle{
+
+                font-size: 28px;
+            }
+        }
+
+
+
+        /* SMALL MOBILE */
+
+        @media(max-width:400px){
+
+            h1{
+
+                font-size: 22px;
+            }
+
+
+            #treebc{
+
+                height: 500px;
+            }
+
+
+            #basket{
+
+                width: 65px;
+
+                height: 37px;
+
+                bottom: 70px;
+            }
+
+
+            #leftbtn,
+            #rightbtn{
+
+                min-width: 90px;
+
+                padding: 8px 12px;
+
+                font-size: 15px;
+            }
+
+
+            .mango{
+
+                width: 27px;
+
+                height: 23px;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<h1>🥭 MANGO RUSH 🥭</h1>
+
+
+<div id="treebc"
+     style="
+     background-image:url(./images/tree1.png);
+     background-size:contain;
+     background-position:center;
+     background-repeat:no-repeat;
+     background-color:#7596ba;
+     ">
+
+
+    <!-- SCORE -->
+
+    <div id="scorebox">
+
+        <span id="scoretitle">
+            🏆 SCORE
+        </span>
+
+        <span id="scoretext">
+            Catch mangoes!
+        </span>
+
+    </div>
+
+
+
+    <!-- LIFE -->
+
+    <div id="lifebox">
+
+        <span id="lifetitle">
+            ❤️ LIFE
+        </span>
+
+        <span id="lifetext">
+            3 Continuous Misses
+        </span>
+
+    </div>
+
+
+
+    <!-- MANGO 1 -->
+
+    <img id="mango1"
+         class="mango"
+         src="./images/mango2.png"
+         style="top:37%;left:33%;">
+
+
+
+    <!-- MANGO 2 -->
+
+    <img id="mango2"
+         class="mango"
+         src="./images/mango3.png"
+         style="top:20%;left:42%;">
+
+
+
+    <!-- MANGO 3 -->
+
+    <img id="mango3"
+         class="mango"
+         src="./images/mango2.png"
+         style="top:31%;left:50%;">
+
+
+
+    <!-- MANGO 4 -->
+
+    <img id="mango4"
+         class="mango"
+         src="./images/mango3.png"
+         style="top:12%;left:58%;">
+
+
+
+    <!-- MANGO 5 -->
+
+    <img id="mango5"
+         class="mango"
+         src="./images/mango2.png"
+         style="top:30%;left:67%;">
+
+
+
+    <!-- BASKET -->
+
+    <img id="basket"
+         src="./images/basket.png">
+
+
+
+    <!-- CATCH SOUND -->
+
+    <audio id="catchsound"
+           src="./Video Project.m4a">
+    </audio>
+
+
+
+    <!-- START -->
+
+    <button id="start">
+        ▶ START GAME
+    </button>
+
+
+
+    <!-- SCORE -->
+
+    <button id="mark">
+        Mangoes: 0
+    </button>
+
+
+
+    <!-- MOBILE BUTTONS -->
+
+    <div id="controls">
+
+        <button id="leftbtn">
+            ◀ LEFT
+        </button>
+
+        <button id="rightbtn">
+            RIGHT ▶
+        </button>
+
+    </div>
+
+
+
+    <!-- GAME OVER -->
+
+    <div id="gameoverbox">
+
+        <div id="gameovertitle">
+            GAME OVER
+        </div>
+
+        <div id="gameovertext">
+            Try Again!
+        </div>
+
+        <button id="tryagain">
+            🔄 TRY AGAIN
+        </button>
+
+    </div>
+
+</div>
+
+
+
+<script>
+
+
+/* =====================================
+   ELEMENTS
+===================================== */
+
+
+var basket =
+    document.getElementById('basket');
+
+
+var markbox =
+    document.getElementById('mark');
+
+
+var gameoverbox =
+    document.getElementById('gameoverbox');
+
+
+var start =
+    document.getElementById('start');
+
+
+var tryagain =
+    document.getElementById('tryagain');
+
+
+var leftbtn =
+    document.getElementById('leftbtn');
+
+
+var rightbtn =
+    document.getElementById('rightbtn');
+
+
+var catchsound =
+    document.getElementById('catchsound');
+
+
+
+/* =====================================
+   GAME VARIABLES
+===================================== */
+
+
+var mark = 0;
+
+var continuousmiss = 0;
+
+var gameover = false;
+
+var started = false;
+
+var gameinterval;
+
+var basketx = 50;
+
+
+
+/* =====================================
+   MANGO VARIABLES
+===================================== */
+
+
+var mango1 =
+    document.getElementById('mango1');
+
+var mango2 =
+    document.getElementById('mango2');
+
+var mango3 =
+    document.getElementById('mango3');
+
+var mango4 =
+    document.getElementById('mango4');
+
+var mango5 =
+    document.getElementById('mango5');
+
+
+var mango1y = 37;
+var mango2y = 20;
+var mango3y = 31;
+var mango4y = 12;
+var mango5y = 30;
+
+
+var mango1x = 33;
+var mango2x = 42;
+var mango3x = 50;
+var mango4x = 58;
+var mango5x = 67;
+
+
+var mango1miss = false;
+var mango2miss = false;
+var mango3miss = false;
+var mango4miss = false;
+var mango5miss = false;
+
+
+
+/* =====================================
+   SOUND SYSTEM
+===================================== */
+
+
+var audioContext;
+
+
+/* CREATE AUDIO */
+
+function createAudio(){
+
+    if(!audioContext){
+
+        audioContext =
+            new (
+                window.AudioContext ||
+                window.webkitAudioContext
+            )();
+
+    }
+
+}
+
+
+/* BUTTON CLICK SOUND */
+
+function buttonSound(){
+
+    createAudio();
+
+    var oscillator =
+        audioContext.createOscillator();
+
+    var gain =
+        audioContext.createGain();
+
+
+    oscillator.connect(gain);
+
+    gain.connect(
+        audioContext.destination
+    );
+
+
+    oscillator.frequency.value = 600;
+
+
+    gain.gain.setValueAtTime(
+        0.15,
+        audioContext.currentTime
+    );
+
+
+    gain.gain.exponentialRampToValueAtTime(
+        0.01,
+        audioContext.currentTime + 0.08
+    );
+
+
+    oscillator.start();
+
+    oscillator.stop(
+        audioContext.currentTime + 0.08
+    );
+
+}
+
+
+
+/* =====================================
+   GAME MUSIC
+===================================== */
+
+
+var musicTimer;
+
+var musicPlaying = false;
+
+var musicNotes =
+    [
+        261.63,
+        329.63,
+        392.00,
+        329.63,
+        293.66,
+        349.23,
+        440.00,
+        349.23
+    ];
+
+var musicIndex = 0;
+
+
+
+function playMusicNote(){
+
+    if(
+        !musicPlaying ||
+        !audioContext
+    ){
+
+        return;
+
+    }
+
+
+    var oscillator =
+        audioContext.createOscillator();
+
+    var gain =
+        audioContext.createGain();
+
+
+    oscillator.type = "sine";
+
+
+    oscillator.frequency.value =
+        musicNotes[musicIndex];
+
+
+    oscillator.connect(gain);
+
+    gain.connect(
+        audioContext.destination
+    );
+
+
+    gain.gain.setValueAtTime(
+        0.035,
+        audioContext.currentTime
+    );
+
+
+    gain.gain.exponentialRampToValueAtTime(
+        0.001,
+        audioContext.currentTime + 0.35
+    );
+
+
+    oscillator.start();
+
+    oscillator.stop(
+        audioContext.currentTime + 0.35
+    );
+
+
+    musicIndex++;
+
+    if(musicIndex >= musicNotes.length){
+
+        musicIndex = 0;
+
+    }
+
+}
+
+
+
+function startMusic(){
+
+    createAudio();
+
+
+    if(audioContext.state === "suspended"){
+
+        audioContext.resume();
+
+    }
+
+
+    musicPlaying = true;
+
+
+    clearInterval(musicTimer);
+
+
+    playMusicNote();
+
+
+    musicTimer =
+        setInterval(
+            playMusicNote,
+            450
+        );
+
+}
+
+
+
+function stopMusic(){
+
+    musicPlaying = false;
+
+    clearInterval(musicTimer);
+
+}
+
+
+
+/* =====================================
+   GAME OVER SOUND
+===================================== */
+
+
+function gameOverSound(){
+
+    createAudio();
+
+
+    var oscillator =
+        audioContext.createOscillator();
+
+    var gain =
+        audioContext.createGain();
+
+
+    oscillator.connect(gain);
+
+    gain.connect(
+        audioContext.destination
+    );
+
+
+    oscillator.frequency.setValueAtTime(
+        500,
+        audioContext.currentTime
+    );
+
+
+    oscillator.frequency.exponentialRampToValueAtTime(
+        80,
+        audioContext.currentTime + 0.4
+    );
+
+
+    gain.gain.setValueAtTime(
+        0.35,
+        audioContext.currentTime
+    );
+
+
+    gain.gain.exponentialRampToValueAtTime(
+        0.01,
+        audioContext.currentTime + 0.4
+    );
+
+
+    oscillator.start();
+
+
+    oscillator.stop(
+        audioContext.currentTime + 0.4
+    );
+
+}
+
+
+
+/* =====================================
+   BASKET MOVEMENT
+===================================== */
+
+
+function moveLeft(){
+
+    if(gameover == true){
+
+        return;
+
+    }
+
+
+    basketx -= 5;
+
+
+    if(basketx < 5){
+
+        basketx = 5;
+
+    }
+
+
+    basket.style.left =
+        basketx + '%';
+
+
+    buttonSound();
+
+}
+
+
+
+function moveRight(){
+
+    if(gameover == true){
+
+        return;
+
+    }
+
+
+    basketx += 5;
+
+
+    if(basketx > 95){
+
+        basketx = 95;
+
+    }
+
+
+    basket.style.left =
+        basketx + '%';
+
+
+    buttonSound();
+
+}
+
+
+
+/* =====================================
+   KEYBOARD
+===================================== */
+
+
+document.addEventListener(
+    'keydown',
+    function(event){
+
+        if(event.key == 'ArrowLeft'){
+
+            moveLeft();
+
+        }
+
+
+        if(event.key == 'ArrowRight'){
+
+            moveRight();
+
+        }
+
+    }
+);
+
+
+
+/* =====================================
+   COLLISION
+===================================== */
+
+
+function checkCatch(mango){
+
+    var mangoRect =
+        mango.getBoundingClientRect();
+
+
+    var basketRect =
+        basket.getBoundingClientRect();
+
+
+    if(
+
+        mangoRect.right >=
+        basketRect.left
+
+        &&
+
+        mangoRect.left <=
+        basketRect.right
+
+        &&
+
+        mangoRect.bottom >=
+        basketRect.top
+
+        &&
+
+        mangoRect.top <=
+        basketRect.bottom
+
+    ){
+
+        return true;
+
+    }
+
+
+    return false;
+
+}
+
+
+
+/* =====================================
+   RESET MANGOES
+===================================== */
+
+
+function resetMango1(){
+
+    mango1x = 33;
+
+    mango1y = 37;
+
+    mango1miss = false;
+
+
+    mango1.style.left =
+        mango1x + '%';
+
+
+    mango1.style.top =
+        mango1y + '%';
+
+}
+
+
+
+function resetMango2(){
+
+    mango2x = 42;
+
+    mango2y = 20;
+
+    mango2miss = false;
+
+
+    mango2.style.left =
+        mango2x + '%';
+
+
+    mango2.style.top =
+        mango2y + '%';
+
+}
+
+
+
+function resetMango3(){
+
+    mango3x = 50;
+
+    mango3y = 31;
+
+    mango3miss = false;
+
+
+    mango3.style.left =
+        mango3x + '%';
+
+
+    mango3.style.top =
+        mango3y + '%';
+
+}
+
+
+
+function resetMango4(){
+
+    mango4x = 58;
+
+    mango4y = 12;
+
+    mango4miss = false;
+
+
+    mango4.style.left =
+        mango4x + '%';
+
+
+    mango4.style.top =
+        mango4y + '%';
+
+}
+
+
+
+function resetMango5(){
+
+    mango5x = 67;
+
+    mango5y = 30;
+
+    mango5miss = false;
+
+
+    mango5.style.left =
+        mango5x + '%';
+
+
+    mango5.style.top =
+        mango5y + '%';
+
+}
+
+
+
+/* =====================================
+   RESET GAME
+===================================== */
+
+
+function resetGame(){
+
+    clearInterval(gameinterval);
+
+    stopMusic();
+
+
+    mark = 0;
+
+    continuousmiss = 0;
+
+    gameover = false;
+
+    started = false;
+
+
+    basketx = 50;
+
+
+    basket.style.left =
+        basketx + '%';
+
+
+    resetMango1();
+
+    resetMango2();
+
+    resetMango3();
+
+    resetMango4();
+
+    resetMango5();
+
+
+    markbox.innerText =
+        'Mangoes: 0';
+
+
+    gameoverbox.style.display =
+        'none';
+
+
+    start.style.display =
+        'block';
+
+}
+
+
+
+/* =====================================
+   MANGO 1
+===================================== */
+
+
+function moveMango1(){
+
+    if(mango1miss == false){
+
+        mango1y += 5;
+
+
+        mango1.style.top =
+            mango1y + '%';
+
+
+        if(mango1y >= 82){
+
+            if(checkCatch(mango1)){
+
+                mark++;
+
+                continuousmiss = 0;
+
+
+                catchsound.currentTime = 0;
+
+                catchsound.play();
+
+
+                mango1x =
+                    Math.floor(
+                        Math.random() * 70
+                    ) + 10;
+
+
+                mango1y = 10;
+
+
+                mango1.style.left =
+                    mango1x + '%';
+
+
+                mango1.style.top =
+                    mango1y + '%';
+
+            }
+
+            else{
+
+                continuousmiss++;
+
+                mango1miss = true;
+
+            }
+
+        }
+
+    }
+
+    else{
+
+        mango1y += 5;
+
+
+        mango1.style.top =
+            mango1y + '%';
+
+
+        if(mango1y >= 105){
+
+            resetMango1();
+
+        }
+
+    }
+
+}
+
+
+
+/* =====================================
+   MANGO 2
+===================================== */
+
+
+function moveMango2(){
+
+    if(mango2miss == false){
+
+        mango2y += 6;
+
+
+        mango2.style.top =
+            mango2y + '%';
+
+
+        if(mango2y >= 82){
+
+            if(checkCatch(mango2)){
+
+                mark++;
+
+                continuousmiss = 0;
+
+
+                catchsound.currentTime = 0;
+
+                catchsound.play();
+
+
+                mango2x =
+                    Math.floor(
+                        Math.random() * 70
+                    ) + 10;
+
+
+                mango2y = 5;
+
+
+                mango2.style.left =
+                    mango2x + '%';
+
+
+                mango2.style.top =
+                    mango2y + '%';
+
+            }
+
+            else{
+
+                continuousmiss++;
+
+                mango2miss = true;
+
+            }
+
+        }
+
+    }
+
+    else{
+
+        mango2y += 6;
+
+
+        mango2.style.top =
+            mango2y + '%';
+
+
+        if(mango2y >= 105){
+
+            resetMango2();
+
+        }
+
+    }
+
+}
+
+
+
+/* =====================================
+   MANGO 3
+===================================== */
+
+
+function moveMango3(){
+
+    if(mango3miss == false){
+
+        mango3y += 4;
+
+
+        mango3.style.top =
+            mango3y + '%';
+
+
+        if(mango3y >= 82){
+
+            if(checkCatch(mango3)){
+
+                mark++;
+
+                continuousmiss = 0;
+
+
+                catchsound.currentTime = 0;
+
+                catchsound.play();
+
+
+                mango3x =
+                    Math.floor(
+                        Math.random() * 70
+                    ) + 10;
+
+
+                mango3y = 8;
+
+
+                mango3.style.left =
+                    mango3x + '%';
+
+
+                mango3.style.top =
+                    mango3y + '%';
+
+            }
+
+            else{
+
+                continuousmiss++;
+
+                mango3miss = true;
+
+            }
+
+        }
+
+    }
+
+    else{
+
+        mango3y += 4;
+
+
+        mango3.style.top =
+            mango3y + '%';
+
+
+        if(mango3y >= 105){
+
+            resetMango3();
+
+        }
+
+    }
+
+}
+
+
+
+/* =====================================
+   MANGO 4
+===================================== */
+
+
+function moveMango4(){
+
+    if(mango4miss == false){
+
+        mango4y += 7;
+
+
+        mango4.style.top =
+            mango4y + '%';
+
+
+        if(mango4y >= 82){
+
+            if(checkCatch(mango4)){
+
+                mark++;
+
+                continuousmiss = 0;
+
+
+                catchsound.currentTime = 0;
+
+                catchsound.play();
+
+
+                mango4x =
+                    Math.floor(
+                        Math.random() * 70
+                    ) + 10;
+
+
+                mango4y = 5;
+
+
+                mango4.style.left =
+                    mango4x + '%';
+
+
+                mango4.style.top =
+                    mango4y + '%';
+
+            }
+
+            else{
+
+                continuousmiss++;
+
+                mango4miss = true;
+
+            }
+
+        }
+
+    }
+
+    else{
+
+        mango4y += 7;
+
+
+        mango4.style.top =
+            mango4y + '%';
+
+
+        if(mango4y >= 105){
+
+            resetMango4();
+
+        }
+
+    }
+
+}
+
+
+
+/* =====================================
+   MANGO 5
+===================================== */
+
+
+function moveMango5(){
+
+    if(mango5miss == false){
+
+        mango5y += 5;
+
+
+        mango5.style.top =
+            mango5y + '%';
+
+
+        if(mango5y >= 82){
+
+            if(checkCatch(mango5)){
+
+                mark++;
+
+                continuousmiss = 0;
+
+
+                catchsound.currentTime = 0;
+
+                catchsound.play();
+
+
+                mango5x =
+                    Math.floor(
+                        Math.random() * 70
+                    ) + 10;
+
+
+                mango5y = 8;
+
+
+                mango5.style.left =
+                    mango5x + '%';
+
+
+                mango5.style.top =
+                    mango5y + '%';
+
+            }
+
+            else{
+
+                continuousmiss++;
+
+                mango5miss = true;
+
+            }
+
+        }
+
+    }
+
+    else{
+
+        mango5y += 5;
+
+
+        mango5.style.top =
+            mango5y + '%';
+
+
+        if(mango5y >= 105){
+
+            resetMango5();
+
+        }
+
+    }
+
+}
+
+
+
+/* =====================================
+   START GAME
+===================================== */
+
+
+function startGame(){
+
+    if(started == true){
+
+        return;
+
+    }
+
+
+    started = true;
+
+    gameover = false;
+
+
+    start.style.display =
+        'none';
+
+
+    startMusic();
+
+
+    gameinterval =
+        setInterval(
+
+            function(){
+
+                if(gameover == true){
+
+                    return;
+
+                }
+
+
+                moveMango1();
+
+                moveMango2();
+
+                moveMango3();
+
+                moveMango4();
+
+                moveMango5();
+
+
+                markbox.innerText =
+                    'Mangoes: ' + mark;
+
+
+                /* GAME OVER */
+
+                if(continuousmiss >= 3){
+
+                    gameover = true;
+
+
+                    clearInterval(
+                        gameinterval
+                    );
+
+
+                    stopMusic();
+
+
+                    gameOverSound();
+
+
+                    gameoverbox.style.display =
+                        'block';
+
+                }
+
+            },
+
+            500
+
+        );
+
+}
+
+
+
+/* =====================================
+   START BUTTON
+===================================== */
+
+
+start.addEventListener(
+    'click',
+    function(){
+
+        buttonSound();
+
+        startGame();
+
+    }
+);
+
+
+
+/* =====================================
+   MOBILE BUTTONS
+===================================== */
+
+
+leftbtn.addEventListener(
+    'click',
+    function(){
+
+        moveLeft();
+
+    }
+);
+
+
+rightbtn.addEventListener(
+    'click',
+    function(){
+
+        moveRight();
+
+    }
+);
+
+
+
+/* =====================================
+   TRY AGAIN
+===================================== */
+
+
+tryagain.addEventListener(
+    'click',
+    function(){
+
+        buttonSound();
+
+        resetGame();
+
+        startGame();
+
+    }
+);
+
+
+</script>
+
+</body>
+
+</html>
+```
